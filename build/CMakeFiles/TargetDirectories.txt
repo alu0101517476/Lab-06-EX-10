@@ -1,0 +1,3 @@
+/workspaces/Lab-06-EX-10/build/CMakeFiles/rebuild_cache.dir
+/workspaces/Lab-06-EX-10/build/CMakeFiles/edit_cache.dir
+/workspaces/Lab-06-EX-10/build/CMakeFiles/p04_busqueda_dispersion.dir

@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/p04_busqueda_dispersion.dir/src/practica06_main.cc.o  -o p04_busqueda_dispersion 
