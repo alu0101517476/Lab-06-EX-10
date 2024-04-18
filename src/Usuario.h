@@ -1,11 +1,8 @@
-
+#pragma once
 
 #include<iostream>
 #include<vector>
 #include<string>
-
-#ifndef USUARIO_H
-#define USUARIO_H
 
 class Usuario {
   public:
@@ -23,5 +20,3 @@ class Usuario {
     std::string correo_;
 
 }; 
-
-#endif
