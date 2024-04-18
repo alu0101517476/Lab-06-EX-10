@@ -4,11 +4,13 @@
 #include <set>
 
 #include "Catalogo.h"
-#include "Usuario.h"
 #include "Sala.h"
+#include "Usuario.h"
 
 class Software {
  public:
+  Software(Catalogo catalogo, std::set<Usuario> usuarios, std::set<Sala> salas)
+      : catalogo_{catalogo}, usuarios_{usuarios}, salas_{salas} {}
   void menu();
 
  private:
