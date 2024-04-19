@@ -11,7 +11,7 @@ void ayuda() {
 }
 
 int main(int argc, char* argv[]) {
-  if (argc != 2) {
+  if (argc != 3) {
     std::cerr << "Error, el número de parámetros es incorrecto. \nPruebe a "
                  "ejecutar './Software --help para obtener más información"
               << std::endl;

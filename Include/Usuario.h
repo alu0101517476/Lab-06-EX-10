@@ -7,6 +7,7 @@
 
 class Usuario {
  public:
+  Usuario() { };
   Usuario(std::string nombre_usuario, std::string contrasena,
           std::string correo)
       : nombre_usuario_(nombre_usuario),
@@ -20,8 +21,6 @@ class Usuario {
   }
   void setContrasena(std::string& contrasena) { contrasena_ = contrasena; }
   void setCorreo(std::string& correo) { correo_ = correo; }
-  // void BuscarLibro(std::string& libro) {     }HAce falta saber más sobre la
-  // organización general para hacer esta función :)
   void introducirLibro(const Libro& libro);
   void eliminarLibro(const Libro& libro);
   bool operator<(const Usuario& usuario2) const;

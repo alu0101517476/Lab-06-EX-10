@@ -14,9 +14,11 @@ Software::Software(const std::string& nombre_fichero_usuarios, const std::string
 void Software::menu() {
   std::string press_enter;
   char press_enter_opcion1;
-  std::string nombre_usuario, password, correo;
+  std::string nombre_usuario, password, correo, titulo_libro;
+  int numero_ocupantes, identificador_sala;
+  Usuario usuario;
   system("clear");
-  std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLITECA\n\n\n\n";
+  std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLIOTECAS\n\n\n\n";
   while (true) {
     std::cout << "         Pulsa Enter";
     if (std::getline(std::cin, press_enter) && press_enter.empty()) {
@@ -34,7 +36,15 @@ void Software::menu() {
           case 1:
             system("clear");
             std::cout << "Iniciando sesión...";
-            // funcion iniciar_sesion()
+            std::cout << "Introduzca el nombre de usuario: ";
+            std::cin >> nombre_usuario;
+            std::cout << "Introduzca la contraseña del usuario: ";
+            std::cin >> password;
+            std::cout << "Iniciando sesión..." << std::endl;
+            usuario.setCorreo(correo);
+            usuario.setContrasena(password);
+            usuario.setNombreUsuario(nombre_usuario);
+            iniciarSesion_(nombre_fichero_base_datos_usuario_, nombre_usuario, password);
             while (true) {
               std::cout << "\n\nPulsa C (continuar): ";
               std::cin >> press_enter_opcion1;
@@ -51,19 +61,42 @@ void Software::menu() {
                 switch (opcion_segunda) {
                   case 1:
                     system("clear");
-                    // funcion prestamoLibros()
+                    std::cout << "Indique el nombre del libro que desea reservar: ";
+                    std::cin >> titulo_libro;
+                    if (prestamoLibros_(nombre_usuario, titulo_libro)) {
+                      std::cout << "El libro está disponible para recogida presencial." << std::endl;
+                    }
+                    else {
+                      std::cout << "No se puede llevar a cabo el préstamos, pruebe en otro momento. Disculpe por las molestias." << std::endl;
+                    }
                     continue;
                   case 2:
                     system("clear");
-                    // funcion devolucion()
+                    std::cout << "¿Cuál es el título del libro que vas a devolver? ";
+                    std::cin >> titulo_libro;
+                    if (devolucion_(nombre_usuario, titulo_libro)) {
+                      std::cout << "El libro se ha devuelto satisfactoriamente" << std::endl;
+                    }
+                    else {
+                      std::cout << "Ha habido algún problema en la devolución. Inténtelo de nuevo más tarde." << std::endl;
+                    }
                     continue;
                   case 3:
                     system("clear");
-                    // funcion buscarLibro()
+                     // buscarLibro()  ¿¿¿¿¿¿¿¿¿¿¿¿¿Y la función???????????????????
                     continue;
                   case 4:
                     system("clear");
-                    // funcion reservaSala()
+                    std::cout << "¿Cuántos van a reservar la sala? ";
+                    std::cin >> numero_ocupantes;
+                    std::cout << "¿Qué sala quieres reservar?" << std::endl;
+                    std::cin >> identificador_sala;
+                    if (reservaSala_(numero_ocupantes, identificador_sala)) {          //¿¿¿¿¿¿¿¿Y el día???????    ¿Y la hora?
+                      std::cout << "Reserva confirmada." << std::endl;
+                    }
+                    else {
+                      std::cout << "Ha habido un problema con la reserva. Inténtelo de nuevo más tarde." << std::endl;
+                    }
                     continue;
                   case 5:
                     system("clear");
