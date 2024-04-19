@@ -13,3 +13,15 @@ bool Sala::cambiarDisponibilidad(int numero_ocupantes) {
   std::cout << "No se puede ocupar la sala con más personas de las permitidas" << std::endl;
   disponibilidad_ = false;
 }
+
+bool Sala::operator<(const Sala& sala) const {
+  return identificador_ < sala.getIdentificador();
+}
+
+bool Sala::operator>(const Sala& sala) const {
+  return identificador_ > sala.getIdentificador();
+}
+
+bool Sala::operator>=(const Sala& sala) const {
+  return identificador_ >= sala.getIdentificador();
+}

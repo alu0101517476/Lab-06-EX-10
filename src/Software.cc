@@ -1,9 +1,16 @@
 #include "../Include/Sofware.h"
 
+Software::Software(const std::string& nombre_fichero_catalogo) : catalogo_{nombre_fichero_catalogo} {
+  for (int i{0}; i < 10; ++i) {
+    Sala sala{7, i};
+    salas_.insert(sala);
+  }
+}
+
 void Software::menu() {
   std::string press_enter;
   char press_enter_opcion1;
-  std::string nombre_usuario, contraseña;
+  std::string nombre_usuario, password;
   system("clear");
   std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLITECA\n\n\n\n";
   while (true) {
@@ -119,31 +126,19 @@ void Software::menu() {
   }
 }
 
-bool Software::iniciarSesion_() {
-  std::string nombre_o_correo_usuario, contraseña;
-  std::cout << "Introduce tu nombre de usuario o correo: ";
-  std::cin >> nombre_o_correo_usuario;
-  std::cout << "Introduce tu contraseña: ";
-  std::cin >> contraseña;
+bool Software::iniciarSesion_(const std::string& nombre_o_correo_usuario, const std::string& password) {
   for (const auto& usuario : usuarios_) {
     if ((usuario.getNombreUsuario() == nombre_o_correo_usuario || usuario.getCorreo() == nombre_o_correo_usuario) &&
-        usuario.getContrasena() == contraseña) {
+        usuario.getContrasena() == password) {
       return true;
     }
   }
   return false;
 }
 
-bool Software::crearUsuario_() {
+bool Software::crearUsuario_(const std::string& nombre_usuario, const std::string& password, const std::string& correo) {
   bool usuario_correo_existentes{false};
-  std::string nombre_usuario, contraseña, correo;
   do {
-    std::cout << "Introduce tu nombre de usuario: ";
-    std::cin >> nombre_usuario;
-    std::cout << "Introduce tu contraseña: ";
-    std::cin >> contraseña;
-    std::cout << "Introduce tu correo: ";
-    std::cin >> correo;
     for (const auto& usuario : usuarios_) {
       if (usuario.getNombreUsuario() == nombre_usuario) {
         usuario_correo_existentes = true;
@@ -157,18 +152,20 @@ bool Software::crearUsuario_() {
       }
     }
   } while(usuario_correo_existentes);
-  Usuario usuario(nombre_usuario, contraseña, correo);
+  Usuario usuario(nombre_usuario, password, correo);
   usuarios_.insert(usuario);
   return true;
 }
 
-bool Software::prestamoLibros_() {
-  std::string titulo_libro;
-  std::cout << "Introduce el libro que deseas solicitar: ";
-  std::cin >> titulo_libro;
+bool Software::prestamoLibros_(const std::string& nombre_usuario, const std::string& titulo_libro) {
   for (const auto& libro : catalogo_.getLibros()) {
     if (libro.getTitulo() == titulo_libro && libro.estaDisponible()) {
-      return true;
+      for (auto usuario : usuarios_) {
+        if (usuario.getNombreUsuario() == nombre_usuario) {
+          usuario.introducirLibro(libro);
+          return true;  
+        }
+      }
     }
   }
   return false;
@@ -183,6 +180,14 @@ bool Software::reservaSala_(int numero_ocupantes, int identificador_sala) {
   return false;
 }
 
-bool Software::devolucion_() {
-  
+bool Software::devolucion_(const std::string& nombre_usuario, const std::string& titulo_libro) {
+  for (const auto& libro : catalogo_.getLibros()) {
+    for (auto usuario : usuarios_) {
+      if (usuario.getNombreUsuario() == nombre_usuario) {
+        usuario.eliminarLibro(libro);
+        return true;
+      }
+    }
+  }
+  return false;
 }
