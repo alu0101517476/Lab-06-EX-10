@@ -1,6 +1,10 @@
 #include "../Include/Sofware.h"
 
-Software::Software(const std::string& nombre_fichero_catalogo) : catalogo_{nombre_fichero_catalogo} {
+Software::Software(Catalogo catalogo, std::set<Usuario> usuarios, std::set<Sala> salas)
+      : catalogo_{catalogo}, usuarios_{usuarios}, salas_{salas} { };
+
+Software::Software(const std::string& nombre_fichero_usuarios, const std::string& nombre_fichero_catalogo) 
+                : catalogo_(nombre_fichero_catalogo), nombre_fichero_base_datos_usuario_(nombre_fichero_usuarios) {
   for (int i{0}; i < 10; ++i) {
     Sala sala{7, i};
     salas_.insert(sala);
@@ -10,7 +14,7 @@ Software::Software(const std::string& nombre_fichero_catalogo) : catalogo_{nombr
 void Software::menu() {
   std::string press_enter;
   char press_enter_opcion1;
-  std::string nombre_usuario, password;
+  std::string nombre_usuario, password, correo;
   system("clear");
   std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLITECA\n\n\n\n";
   while (true) {
@@ -93,8 +97,14 @@ void Software::menu() {
             break;
           case 2:
             system("clear");
+            std::cout << "Introduzca el nombre de usuario: ";
+            std::cin >> nombre_usuario;
+            std::cout << "Introduzca la contraseña del usuario: ";
+            std::cin >> password;
+            std::cout << "Introduzca el correo del usuario: ";
+            std::cin >> correo;
             std::cout << "Creando cuenta...";
-            // funcion crear_usuario()
+            crearUsuario_(nombre_fichero_base_datos_usuario_, nombre_usuario, password, correo);
             while (true) {
               std::cout << "\n\nPulsa C (continuar): ";
               std::cin >> press_enter_opcion1;
@@ -126,34 +136,52 @@ void Software::menu() {
   }
 }
 
-bool Software::iniciarSesion_(const std::string& nombre_o_correo_usuario, const std::string& password) {
-  for (const auto& usuario : usuarios_) {
-    if ((usuario.getNombreUsuario() == nombre_o_correo_usuario || usuario.getCorreo() == nombre_o_correo_usuario) &&
-        usuario.getContrasena() == password) {
-      return true;
+bool Software::iniciarSesion_(const std::string& nombre_fichero_usuarios, const std::string& nombre_usuario, const std::string& password) {
+  std::ifstream fichero_usuario{nombre_fichero_usuarios, std::ios::in};
+  std::string linea, nombre_usuario_x;
+  while (fichero_usuario >> nombre_usuario_x) {
+    if (nombre_usuario == nombre_usuario_x) {
+      std::string password_x;
+      fichero_usuario >> password_x;
+      if (password_x == password) {
+        std::cout << "Inicio de sesión satisfactorio" << std::endl;
+        fichero_usuario.close();
+        return true;
+      }
+      else {
+        std::cout << "No se ha podido iniciar sesión. Contraseña incorrecta" << std::endl;
+        fichero_usuario.close();
+        return false;
+      }
     }
+    std::getline(fichero_usuario, linea);
   }
+  std::cout << "No se ha encontrado el usuario. No se ha iniciado sesión" << std::endl;
+  fichero_usuario.close();
   return false;
 }
 
-bool Software::crearUsuario_(const std::string& nombre_usuario, const std::string& password, const std::string& correo) {
+bool Software::crearUsuario_(const std::string& nombre_fichero_usuarios, const std::string& nombre_usuario, const std::string& password, const std::string& correo) {
   bool usuario_correo_existentes{false};
-  do {
-    for (const auto& usuario : usuarios_) {
-      if (usuario.getNombreUsuario() == nombre_usuario) {
-        usuario_correo_existentes = true;
-        std::cout << "El nombre de usuario se encuentra en uso, prueba a introducir otro nombre de usuario" << std::endl;
-        break;
-      }
-      if (usuario.getCorreo() == correo) {
-        usuario_correo_existentes = true;
-        std::cout << "El correo que ha intrucido se encuentra en uso, prueba a introducir otro correo" << std::endl;
-        break;
-      }
+  std::ifstream fichero_usuario{nombre_fichero_usuarios, std::ios::in};
+  std::string linea, nombre_usuario_x;
+  while (fichero_usuario >> nombre_usuario_x) {
+    std::getline(fichero_usuario, linea);
+    if (nombre_usuario == nombre_usuario_x) {
+      usuario_correo_existentes = true;
+      std::cout << "El correo que ha intrucido se encuentra en uso, prueba a introducir otro correo" << std::endl;
+      return false;
     }
-  } while(usuario_correo_existentes);
-  Usuario usuario(nombre_usuario, password, correo);
-  usuarios_.insert(usuario);
+  }
+  if (!usuario_correo_existentes) {
+    Usuario usuario(nombre_usuario, password, correo);
+    usuarios_.insert(usuario);
+  }
+  fichero_usuario.close();
+  std::ofstream fichero_usuario_(nombre_fichero_usuarios, std::ios::app);
+  fichero_usuario_ << nombre_usuario << " " << password << " " << correo << std::endl;
+  fichero_usuario_.close();
+  std::cout << "Cuenta creada satisfactoriamente." << std::endl;
   return true;
 }
 

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Sofware.h"
+#include "../Include/Sofware.h"
 
 void ayuda() {
   std::cout << "Este programa implementa el funcionamiento de un software de "
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     ayuda();
     return 0;
   }
-  Software software_red_bibliotecas{static_cast<std::string>(argv[1])};
+  Software software_red_bibliotecas{static_cast<std::string>(argv[1]), static_cast<std::string>(argv[2])};
   software_red_bibliotecas.menu();
   return 0;
 }
