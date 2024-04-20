@@ -227,7 +227,6 @@ bool Software::prestamoLibros_(const std::string& nombre_usuario, const std::str
         }
       }
     }
-    //std::cout << "Prueba" << std::endl;
   }
   return false;
 }
