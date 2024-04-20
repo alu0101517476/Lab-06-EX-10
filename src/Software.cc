@@ -35,7 +35,7 @@ void Software::menu() {
         switch (opcion_inicio) {
           case 1:
             system("clear");
-            std::cout << "Iniciando sesión...";
+            std::cout << "Iniciando sesión..." << std::endl;
             std::cout << "Introduzca el nombre de usuario: ";
             std::cin >> nombre_usuario;
             std::cout << "Introduzca la contraseña del usuario: ";
@@ -44,7 +44,7 @@ void Software::menu() {
             usuario.setCorreo(correo);
             usuario.setContrasena(password);
             usuario.setNombreUsuario(nombre_usuario);
-            iniciarSesion_(nombre_fichero_base_datos_usuario_, nombre_usuario, password);
+            if (!iniciarSesion_(nombre_fichero_base_datos_usuario_, nombre_usuario, password)) { break; }
             while (true) {
               std::cout << "\n\nPulsa C (continuar): ";
               std::cin >> press_enter_opcion1;
@@ -65,8 +65,7 @@ void Software::menu() {
                     std::cin >> titulo_libro;
                     if (prestamoLibros_(nombre_usuario, titulo_libro)) {
                       std::cout << "El libro está disponible para recogida presencial." << std::endl;
-                    }
-                    else {
+                    } else {
                       std::cout << "No se puede llevar a cabo el préstamos, pruebe en otro momento. Disculpe por las molestias." << std::endl;
                     }
                     continue;
@@ -228,6 +227,7 @@ bool Software::prestamoLibros_(const std::string& nombre_usuario, const std::str
         }
       }
     }
+    //std::cout << "Prueba" << std::endl;
   }
   return false;
 }
