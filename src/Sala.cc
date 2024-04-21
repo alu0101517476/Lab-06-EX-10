@@ -5,7 +5,8 @@ bool Sala::cambiarDisponibilidad(int numero_ocupantes) {
     std::cout << "La sala se ha ocupado con " << numero_ocupantes << " personas" << std::endl;
     disponibilidad_ = false;
     return true;
-  } else {
+  } 
+  else {
     std::cout << "El aforo máximo para esa sala es de " << aforo_ << std::endl;
     return false;
   }

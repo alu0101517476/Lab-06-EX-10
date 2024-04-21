@@ -9,6 +9,17 @@ Software::Software(const std::string& nombre_fichero_usuarios, const std::string
     Sala sala{7, i};
     salas_.insert(sala);
   }
+  std::ifstream fichero_usuario{nombre_fichero_usuarios, std::ios::in};
+  std::string linea, nombre_usuario_x, password_x, correo_x;
+  while (fichero_usuario >> nombre_usuario_x) {
+    fichero_usuario >> password_x;
+    fichero_usuario >> correo_x;
+    Usuario usuario(nombre_usuario_x, password_x, correo_x);
+    usuarios_.insert(usuario);
+    std::getline(fichero_usuario, linea);
+  }
+  std::cout << "No se ha encontrado el usuario. No se ha iniciado sesión" << std::endl;
+  fichero_usuario.close();
 }
 
 void Software::menu() {
@@ -65,8 +76,9 @@ void Software::menu() {
                     std::cin >> titulo_libro;
                     if (prestamoLibros_(nombre_usuario, titulo_libro)) {
                       std::cout << "El libro está disponible para recogida presencial." << std::endl;
-                    } else {
-                      std::cout << "No se puede llevar a cabo el préstamos, pruebe en otro momento. Disculpe por las molestias." << std::endl;
+                    } 
+                    else {
+                      std::cout << "No se puede llevar a cabo el préstamo, pruebe en otro momento. Disculpe por las molestias." << std::endl;
                     }
                     // Esto evita el bucle infinito
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -76,11 +88,12 @@ void Software::menu() {
                     std::cout << "¿Cuál es el título del libro que vas a devolver? ";
                     std::cin >> titulo_libro;
                     if (devolucion_(nombre_usuario, titulo_libro)) {
-                      std::cout << "El libro se ha devuelto satisfactoriamente" << std::endl;
+                      std::cout << "El libro se ha devuelto satisfactoriamente." << std::endl;
                     }
                     else {
                       std::cout << "Ha habido algún problema en la devolución. Inténtelo de nuevo más tarde." << std::endl;
                     }
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     continue;
                   case 3:
                     system("clear");
@@ -102,7 +115,7 @@ void Software::menu() {
                     std::cin >> dia_sala;
                     std::cout << "¿Hora de la reserva? ";
                     std::cin >> hora_sala;
-                    if (reservaSala_(numero_ocupantes, identificador_sala, hora_sala, dia_sala)) {          //¿¿¿¿¿¿¿¿Y el día???????    ¿Y la hora?
+                    if (reservaSala_(numero_ocupantes, identificador_sala, hora_sala, dia_sala)) {
                       std::cout << "Reserva realizada con éxito" << std::endl;
                     }
                     else {
@@ -232,7 +245,6 @@ bool Software::crearUsuario_(const std::string& nombre_fichero_usuarios, const s
 bool Software::prestamoLibros_(const std::string& nombre_usuario, const std::string& titulo_libro) {
   bool prestamo_realizado = false;
   for (const auto& libro : catalogo_.getLibros()) {
-    // por alguna razón no entra a este if
     if (libro.getTitulo() == titulo_libro && libro.estaDisponible()) {
       for (auto usuario : usuarios_) {
         if (usuario.getNombreUsuario() == nombre_usuario) {
@@ -242,9 +254,8 @@ bool Software::prestamoLibros_(const std::string& nombre_usuario, const std::str
         }
       }
     }
-    if (prestamo_realizado) return true;
   }
-  return false;
+  return prestamo_realizado;
 }
 
 bool Software::buscarLibro_(const std::string& titulo_libro) {
@@ -269,10 +280,12 @@ bool Software::reservaSala_(int numero_ocupantes, int identificador_sala, int di
 
 bool Software::devolucion_(const std::string& nombre_usuario, const std::string& titulo_libro) {
   for (const auto& libro : catalogo_.getLibros()) {
-    for (auto usuario : usuarios_) {
-      if (usuario.getNombreUsuario() == nombre_usuario) {
-        usuario.eliminarLibro(libro);
-        return true;
+    if (libro.getTitulo() == titulo_libro) {
+      for (auto usuario : usuarios_) {
+        if (usuario.getNombreUsuario() == nombre_usuario) {
+          usuario.eliminarLibro(libro);
+          return true;
+        }
       }
     }
   }
