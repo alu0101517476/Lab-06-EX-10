@@ -15,7 +15,7 @@ void Software::menu() {
   std::string press_enter;
   char press_enter_opcion1;
   std::string nombre_usuario, password, correo, titulo_libro;
-  int numero_ocupantes, identificador_sala;
+  int numero_ocupantes, identificador_sala, dia_sala, hora_sala;
   Usuario usuario;
   system("clear");
   std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLIOTECAS\n\n\n\n";
@@ -61,13 +61,15 @@ void Software::menu() {
                 switch (opcion_segunda) {
                   case 1:
                     system("clear");
-                    std::cout << "Indique el nombre del libro que desea reservar: ";
+                    std::cout << "Indique el nombre del libro que desea reservar separado por guiones (Ej: La-Celestina): ";
                     std::cin >> titulo_libro;
                     if (prestamoLibros_(nombre_usuario, titulo_libro)) {
                       std::cout << "El libro está disponible para recogida presencial." << std::endl;
                     } else {
                       std::cout << "No se puede llevar a cabo el préstamos, pruebe en otro momento. Disculpe por las molestias." << std::endl;
                     }
+                    // Esto evita el bucle infinito
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     continue;
                   case 2:
                     system("clear");
@@ -82,16 +84,26 @@ void Software::menu() {
                     continue;
                   case 3:
                     system("clear");
-                     // buscarLibro()  ¿¿¿¿¿¿¿¿¿¿¿¿¿Y la función???????????????????
+                    std::cout << "¿Cuál es el título del libro que quieres consultar? ";
+                    std::cin >> titulo_libro;
+                    if (buscarLibro_(titulo_libro)) {
+                      std::cout << "El libro está disponible en el catálogo" << std::endl;
+                    } else {
+                      std::cout << "El libro no está disponible en el catálogo" << std::endl;
+                    }
                     continue;
                   case 4:
                     system("clear");
                     std::cout << "¿Cuántos van a reservar la sala? ";
                     std::cin >> numero_ocupantes;
-                    std::cout << "¿Qué sala quieres reservar?" << std::endl;
+                    std::cout << "¿Qué sala quieres reservar? ";
                     std::cin >> identificador_sala;
-                    if (reservaSala_(numero_ocupantes, identificador_sala)) {          //¿¿¿¿¿¿¿¿Y el día???????    ¿Y la hora?
-                      std::cout << "Reserva confirmada." << std::endl;
+                    std::cout << "¿Día de la reserva? ";
+                    std::cin >> dia_sala;
+                    std::cout << "¿Hora de la reserva? ";
+                    std::cin >> hora_sala;
+                    if (reservaSala_(numero_ocupantes, identificador_sala, hora_sala, dia_sala)) {          //¿¿¿¿¿¿¿¿Y el día???????    ¿Y la hora?
+                      std::cout << "Reserva realizada con éxito" << std::endl;
                     }
                     else {
                       std::cout << "Ha habido un problema con la reserva. Inténtelo de nuevo más tarde." << std::endl;
@@ -218,20 +230,35 @@ bool Software::crearUsuario_(const std::string& nombre_fichero_usuarios, const s
 }
 
 bool Software::prestamoLibros_(const std::string& nombre_usuario, const std::string& titulo_libro) {
+  bool prestamo_realizado = false;
   for (const auto& libro : catalogo_.getLibros()) {
+    // por alguna razón no entra a este if
     if (libro.getTitulo() == titulo_libro && libro.estaDisponible()) {
       for (auto usuario : usuarios_) {
         if (usuario.getNombreUsuario() == nombre_usuario) {
           usuario.introducirLibro(libro);
-          return true;  
+          prestamo_realizado = true;
+          break; // Salir del bucle porque el préstamo se ha realizado con éxito
         }
       }
+    }
+    if (prestamo_realizado) return true;
+  }
+  return false;
+}
+
+bool Software::buscarLibro_(const std::string& titulo_libro) {
+  for (const auto& libro : catalogo_.getLibros()) {
+    // por alguna razón no entra a este if
+    if (libro.getTitulo() == titulo_libro) {
+      return true;
     }
   }
   return false;
 }
 
-bool Software::reservaSala_(int numero_ocupantes, int identificador_sala) {
+
+bool Software::reservaSala_(int numero_ocupantes, int identificador_sala, int dia_sala, int hora_sala) {
   for (auto sala : salas_) {
     if (identificador_sala == sala.getIdentificador() && sala.estaDisponible()) {
       return sala.cambiarDisponibilidad(numero_ocupantes);

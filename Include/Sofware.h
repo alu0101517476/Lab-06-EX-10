@@ -3,6 +3,7 @@
 #include <iostream>
 #include <set>
 #include <string>
+#include <limits>
 
 #include "Catalogo.h"
 #include "Sala.h"
@@ -18,8 +19,9 @@ class Software {
   bool iniciarSesion_(const std::string& nombre_fichero_usuarios, const std::string& nombre_usuario, const std::string& password);
   bool crearUsuario_(const std::string& nombre_fichero_usuarios, const std::string& nombre_usuario, const std::string& password, const std::string& correo);
   bool prestamoLibros_(const std::string& nombre_usuario, const std::string& titulo_libro);
-  bool reservaSala_(int numero_ocupantes, int identificador_sala);
+  bool reservaSala_(int numero_ocupantes, int identificador_sala, int dia_sala, int hora_sala);
   bool devolucion_(const std::string& nombre_usuario, const std::string& titulo_libro);
+  bool buscarLibro_(const std::string& titulo_libro);
   // atributos
   Catalogo catalogo_;
   std::string nombre_fichero_base_datos_usuario_;

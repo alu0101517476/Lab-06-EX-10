@@ -9,3 +9,5 @@ Catalogo::Catalogo(const std::string& nombre_fichero_catalogo) {
   }
   fichero_catalogo.close();
 }
+
+
