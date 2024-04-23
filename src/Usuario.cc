@@ -16,6 +16,6 @@ bool Usuario::operator>(const Usuario& usuario2) const {
   return nombre_usuario_ > usuario2.getNombreUsuario();
 }
   
-bool Usuario::operator>=(const Usuario& usuario2) const {
+bool Usuario::operator>=(const Usuario& usuario2) const {    
   return nombre_usuario_ >= usuario2.getNombreUsuario();
 }
