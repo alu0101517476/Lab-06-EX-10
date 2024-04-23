@@ -1,5 +1,18 @@
 #include "../Include/Sofware.h"
+std::string Cifra(std::string palabra) {
+  for (int i{0}; i < palabra.size(); ++i) {
+    palabra[i] = palabra[i] + 30;
+  }
+  return palabra;
+}
 
+
+std::string DCifra(std::string palabra) {
+  for(int i = 0; i < palabra.size(); i++) {
+    palabra[i] -= 30;
+  }
+  return palabra; 
+}
 Software::Software(Catalogo catalogo, std::set<Usuario> usuarios, std::set<Sala> salas)
       : catalogo_{catalogo}, usuarios_{usuarios}, salas_{salas} { };
 
@@ -11,10 +24,10 @@ Software::Software(const std::string& nombre_fichero_usuarios, const std::string
   }
   std::ifstream fichero_usuario{nombre_fichero_usuarios, std::ios::in};
   std::string linea, nombre_usuario_x, password_x, correo_x;
-  while (fichero_usuario >> nombre_usuario_x) {
-    fichero_usuario >> password_x;
-    fichero_usuario >> correo_x;
-    Usuario usuario(nombre_usuario_x, password_x, correo_x);
+  while (fichero_usuario >> (nombre_usuario_x)) {
+    fichero_usuario >>password_x;
+    std::string password = DCifra(password_x);
+    Usuario usuario(nombre_usuario_x, password, correo_x);
     usuarios_.insert(usuario);
     std::getline(fichero_usuario, linea);
   }
@@ -55,7 +68,7 @@ void Software::menu() {
             usuario.setCorreo(correo);
             usuario.setContrasena(password);
             usuario.setNombreUsuario(nombre_usuario);
-            if (!iniciarSesion_(nombre_fichero_base_datos_usuario_, nombre_usuario, password)) { break; }
+            if (!iniciarSesion_(nombre_fichero_base_datos_usuario_, Cifra(nombre_usuario), Cifra(password))) { break; }
             while (true) {
               std::cout << "\n\nPulsa C (continuar): ";
               std::cin >> press_enter_opcion1;
@@ -112,9 +125,13 @@ void Software::menu() {
                     std::cout << "¿Qué sala quieres reservar? ";
                     std::cin >> identificador_sala;
                     std::cout << "¿Día de la reserva? ";
-                    std::cin >> dia_sala;
+                    std::cin >> dia_sala; 
                     std::cout << "¿Hora de la reserva? ";
                     std::cin >> hora_sala;
+                    // if (hora_sala < 9 || hora_sala > 21) {
+                      // std::cout << "Hora no accesible\n\nHorario de la biblioteca: 9:00-21:00" << std::endl;
+                      // continue;
+                    //}
                     if (reservaSala_(numero_ocupantes, identificador_sala, hora_sala, dia_sala)) {
                       std::cout << "Reserva realizada con éxito" << std::endl;
                     }
@@ -198,9 +215,9 @@ bool Software::iniciarSesion_(const std::string& nombre_fichero_usuarios, const 
   std::string linea, nombre_usuario_x;
   while (fichero_usuario >> nombre_usuario_x) {
     if (nombre_usuario == nombre_usuario_x) {
-      std::string password_x;
+      std::string password_x;  
       fichero_usuario >> password_x;
-      if (password_x == password) {
+      if (DCifra(password_x) == password) {
         std::cout << "Inicio de sesión satisfactorio" << std::endl;
         fichero_usuario.close();
         return true;
@@ -231,12 +248,12 @@ bool Software::crearUsuario_(const std::string& nombre_fichero_usuarios, const s
     }
   }
   if (!usuario_correo_existentes) {
-    Usuario usuario(nombre_usuario, password, correo);
+    Usuario usuario(nombre_usuario, Cifra(password), correo);
     usuarios_.insert(usuario);
   }
   fichero_usuario.close();
   std::ofstream fichero_usuario_(nombre_fichero_usuarios, std::ios::app);
-  fichero_usuario_ << nombre_usuario << " " << password << " " << correo << std::endl;
+  fichero_usuario_ << nombre_usuario << " " << Cifra(password) << " " << correo << std::endl;
   fichero_usuario_.close();
   std::cout << "Cuenta creada satisfactoriamente." << std::endl;
   return true;
@@ -270,6 +287,10 @@ bool Software::buscarLibro_(const std::string& titulo_libro) {
 
 
 bool Software::reservaSala_(int numero_ocupantes, int identificador_sala, int dia_sala, int hora_sala) {
+  if (dia_sala < 1 || dia_sala > 31) {
+    std::cout << "Error, el día no es correcto" << std::endl;
+    return false;
+  }
   for (auto sala : salas_) {
     if (identificador_sala == sala.getIdentificador() && sala.estaDisponible()) {
       return sala.cambiarDisponibilidad(numero_ocupantes);
@@ -291,3 +312,4 @@ bool Software::devolucion_(const std::string& nombre_usuario, const std::string&
   }
   return false;
 }
+
