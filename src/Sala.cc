@@ -10,7 +10,24 @@ Sala(int aforo, int identificador) : aforo_(aforo), identificador_{identificador
 }
 
 bool Sala::reservaValida(const std::string& mes, const int dia, int hora) {
+  // Según si el mes tiene 30 o 31 días le asignamos un identificador especial para
+  // comprobar si el día es correcto
+  std::map<std::string, int> mes_numero_mes{{"Enero", 1}, {"Febrero", 3}, 
+  {"Marzo", 1} {"Abril", 2}, {"Mayo", 1}, {"Junio", 2}, {"Julio", 1}, {"Agosto", 1}, 
+  {"Septiembre", 2}, {"Octubre", 1}, {"Noviembre", 2}, {"Diciembre", 1}};
+  int identificador_mes{mes_numero_mes[mes]};
+  switch (identificador_mes) {
+  case 1:
+    if () // El día no es > 31
+    break;
   
+  case 2:
+    if () // El día no es < 1 
+    break;
+
+  default: // Febrero
+    break;
+  }
 }
 
 
