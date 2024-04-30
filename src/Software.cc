@@ -17,7 +17,14 @@ Software::Software(Catalogo catalogo, std::set<Usuario> usuarios, std::set<Sala>
       : catalogo_{catalogo}, usuarios_{usuarios}, salas_{salas} { };
 
 Software::Software(const std::string& nombre_fichero_usuarios, const std::string& nombre_fichero_catalogo) 
-                : catalogo_(nombre_fichero_catalogo), nombre_fichero_base_datos_usuario_(nombre_fichero_usuarios) {
+                : catalogo_(nombre_fichero_catalogo) {
+                std::cout << " 1) Solicitar préstamo\n";
+                std::cout << " 2) Realizar devolución\n";
+                std::cout << " 3) Consultar catálogo\n";
+                std::cout << " 4) Reserva de sala\n";
+                std::cout << " 5) Cerrar sesión\n\n";
+                std::cout << "Opción: ";
+                std::cin >> opcion_segunda;, nombre_fichero_base_datos_usuario_(nombre_fichero_usuarios) {
   for (int i{0}; i < 10; ++i) {
     Sala sala{7, i};
     salas_.insert(sala);
@@ -33,16 +40,20 @@ Software::Software(const std::string& nombre_fichero_usuarios, const std::string
   }
   std::cout << "No se ha encontrado el usuario. No se ha iniciado sesión" << std::endl;
   fichero_usuario.close();
+  }
 }
 
 void Software::menu() {
   std::string press_enter;
   char press_enter_opcion1;
   std::string nombre_usuario, password, correo, titulo_libro;
-  int numero_ocupantes, identificador_sala, dia_sala, hora_sala;
+  int numero_ocupantes, identificador_sala, dia_sala, hora_sala, id_libro;
   Usuario usuario;
   system("clear");
   std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLIOTECAS\n\n\n\n";
+  std::cout << "--> Inicia sesión en nuestra biblioteca para acceder a diferentes servicios o crea por primera vez una cuenta propia" << std::endl;
+  std::cout << "--> Podrás acceder a nuestro cátalogo que ofrece una amplia variedad de árticulos, libros y revista" << std::endl;
+  std::cout << "Cualquier duda comunicarse con los diferentes teléfonos de contacto:\n  +34 677 77 77 77\n +34 622 22 22 22" << std::endl; 
   while (true) {
     std::cout << "         Pulsa Enter";
     if (std::getline(std::cin, press_enter) && press_enter.empty()) {
@@ -51,16 +62,15 @@ void Software::menu() {
         std::cout << "\n¿Qué acción deseas realizar?\n\n";
         std::cout << " 1) Iniciar sesión\n";
         std::cout << " 2) Crear cuenta\n";
-        std::cout << " 3) Salir\n\n";
+        std::cout << " 3) Salir\n";
         std::cout << "Opción: ";
-        //            Usuario usuario;
         int opcion_inicio, opcion_segunda;
         std::cin >> opcion_inicio;
         switch (opcion_inicio) {
           case 1:
             system("clear");
             std::cout << "Iniciando sesión..." << std::endl;
-            std::cout << "Introduzca el nombre de usuario: ";
+            std::cout << "Para poder llevar a cabo el inicio de sesión, es necesario ingresar las credenciales correctamente\n\nIntroduzca el nombre de usuario: ";
             std::cin >> nombre_usuario;
             std::cout << "Introduzca la contraseña del usuario: ";
             std::cin >> password;
@@ -85,9 +95,10 @@ void Software::menu() {
                 switch (opcion_segunda) {
                   case 1:
                     system("clear");
-                    std::cout << "Indique el nombre del libro que desea reservar separado por guiones (Ej: La-Celestina): ";
-                    std::cin >> titulo_libro;
-                    if (prestamoLibros_(nombre_usuario, titulo_libro)) {
+                    catalogo_.Mostrar();
+                    std::cout << "Indique el identificador del libro que desea reservar (Ej: 2 (La Celestina)): ";
+                    std::cin >> id_libro;
+                    if (prestamoLibros_(nombre_usuario, catalogo_.getLibro(id_libro))) {
                       std::cout << "El libro está disponible para recogida presencial." << std::endl;
                     } 
                     else {
@@ -98,9 +109,10 @@ void Software::menu() {
                     continue;
                   case 2:
                     system("clear");
-                    std::cout << "¿Cuál es el título del libro que vas a devolver? ";
-                    std::cin >> titulo_libro;
-                    if (devolucion_(nombre_usuario, titulo_libro)) {
+                    catalogo_.Mostrar();
+                    std::cout << "¿Cuál es el título del libro que vas a devolver? Indique el identificador ";
+                    std::cin >> id_libro;
+                    if (devolucion_(nombre_usuario, catalogo_.getLibro(id_libro))) {
                       std::cout << "El libro se ha devuelto satisfactoriamente." << std::endl;
                     }
                     else {
@@ -171,13 +183,15 @@ void Software::menu() {
             break;
           case 2:
             system("clear");
-            std::cout << "Introduzca el nombre de usuario: ";
+            std::cout << "Para llevar a cabo la creación de una cuenta de usuario será necesario introducir las credenciales deseadas por el usuario\n\nIntroduzca el nombre de usuario: ";
             std::cin >> nombre_usuario;
             std::cout << "Introduzca la contraseña del usuario: ";
             std::cin >> password;
             std::cout << "Introduzca el correo del usuario: ";
             std::cin >> correo;
-            std::cout << "Creando cuenta...";
+            std::cout << "\nVerificando credenciales ingresadas";
+            system("sleep(2)");
+            std::cout << "\nCreando cuenta...";
             crearUsuario_(nombre_fichero_base_datos_usuario_, nombre_usuario, password, correo);
             while (true) {
               std::cout << "\n\nPulsa C (continuar): ";
@@ -285,10 +299,32 @@ bool Software::buscarLibro_(const std::string& titulo_libro) {
   return false;
 }
 
+bool Software::reservaValida_(const std::string& mes, const int dia, int hora) {
+  // Según si el mes tiene 30 o 31 días le asignamos un identificador especial para
+  // comprobar si el día es correcto
+  std::map<std::string, int> mes_numero_mes{{"Enero", 1}, {"Febrero", 3}, 
+  {"Marzo", 1} {"Abril", 2}, {"Mayo", 1}, {"Junio", 2}, {"Julio", 1}, {"Agosto", 1}, 
+  {"Septiembre", 2}, {"Octubre", 1}, {"Noviembre", 2}, {"Diciembre", 1}};
+  int identificador_mes{mes_numero_mes[mes]};
+  switch (identificador_mes) {
+  case 1:
+    if (dia <= 31) return true; // El día no es > 31
+    break;
+  
+  case 2:
+    if (dia <= 30) return true; // El día no es < 1 
+    break;
 
-bool Software::reservaSala_(int numero_ocupantes, int identificador_sala, int dia_sala, int hora_sala) {
-  if (dia_sala < 1 || dia_sala > 31) {
-    std::cout << "Error, el día no es correcto" << std::endl;
+  default: // Febrero
+    if (dia <= 28) return true;
+    break;
+  }
+  return false;
+}
+
+bool Software::reservaSala_(int numero_ocupantes, const std::string& mes, int identificador_sala, int dia_sala, int hora_sala) {
+  if (reservaValida_(mes, dia, hora)) {
+    std::cerr << "Error, la fecha introducida no es válida para realizar una reserva " << std::endl;
     return false;
   }
   for (auto sala : salas_) {

@@ -1,28 +1,28 @@
-Don-Quijote-de-la-Mancha
-La-Celestina
-El-Lazarillo-de-Tormes
-Fuenteovejuna
-El-burlador-de-Sevilla
-La-vida-es-sueño
-La-sombra-del-viento
-El-tiempo-entre-costuras
-Patria
-La-ciudad-y-los-perros
-Los-renglones-torcidos-de-Dios
-El-corazón-helado
-Veinte-poemas-de-amor-y-una-canción-desesperada
-Poeta-en-Nueva-York
-Antología-poética
-La-rebelión-de-las-masas
-España-invertebrada
-Meditaciones-del-Quijote
-Amor-líquido
-Historia-de-España
-La-España-vacía
-Los-mitos-de-la-Guerra-civil
-Imperiofobia-y-leyenda-negra
-El-mundo-hasta-ayer
-Breves-respuestas-a-las-grandes-preguntas
-El-gen-egoísta
-El-crash-del-2010
-El-economista-camuflado
+1 Don Quijote de la Mancha
+2 La Celestina
+3 El Lazarillo de Tormes
+4 Fuenteovejuna
+5 El burlador de Sevilla
+6 La vida es sueño
+7 La sombra del viento
+8 El tiempo entre costuras
+9 Patria
+10 La ciudad y los perros
+11 Los renglones torcidos de Dios
+12 El corazón helado
+13 Veinte poemas de amor y una canción desesperada
+14 Poeta en Nueva York
+15 Antología poética
+16 La rebelión de las masas
+17 España invertebrada
+18 Meditaciones del Quijote
+19 Amor líquido
+20 Historia de España
+21 La España vacía
+22 Los mitos de la Guerra civil
+23 Imperiofobia y leyenda negra
+24 El mundo hasta ayer
+25 Breves respuestas a las grandes preguntas
+26 El gen egoísta
+27 El crash del 2010
+28 El economista camuflado
