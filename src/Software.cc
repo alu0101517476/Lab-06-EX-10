@@ -17,14 +17,14 @@ Software::Software(Catalogo catalogo, std::set<Usuario> usuarios, std::set<Sala>
       : catalogo_{catalogo}, usuarios_{usuarios}, salas_{salas} { };
 
 Software::Software(const std::string& nombre_fichero_usuarios, const std::string& nombre_fichero_catalogo) 
-                : catalogo_(nombre_fichero_catalogo) {
+                : catalogo_(nombre_fichero_catalogo), nombre_fichero_base_datos_usuario_(nombre_fichero_usuarios) {
                 std::cout << " 1) Solicitar préstamo\n";
                 std::cout << " 2) Realizar devolución\n";
                 std::cout << " 3) Consultar catálogo\n";
                 std::cout << " 4) Reserva de sala\n";
                 std::cout << " 5) Cerrar sesión\n\n";
                 std::cout << "Opción: ";
-                std::cin >> opcion_segunda;, nombre_fichero_base_datos_usuario_(nombre_fichero_usuarios) {
+                std::cin >> opcion_segunda; 
   for (int i{0}; i < 10; ++i) {
     Sala sala{7, i};
     salas_.insert(sala);
@@ -40,7 +40,6 @@ Software::Software(const std::string& nombre_fichero_usuarios, const std::string
   }
   std::cout << "No se ha encontrado el usuario. No se ha iniciado sesión" << std::endl;
   fichero_usuario.close();
-  }
 }
 
 void Software::menu() {
