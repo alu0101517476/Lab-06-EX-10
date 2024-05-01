@@ -26,8 +26,6 @@ int main(int argc, char* argv[]) {
   std::string nombre_fichero_catalogo{argv[1]}, nombre_fichero_usuarios{argv[2]};
   std::cout << nombre_fichero_catalogo << ' ' << nombre_fichero_usuarios << std::endl;
   Software software_red_bibliotecas{nombre_fichero_catalogo, nombre_fichero_usuarios};
-  /*
   software_red_bibliotecas.menu();
-  */
   return 0;
 }
