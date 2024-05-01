@@ -18,13 +18,6 @@ Software::Software(Catalogo catalogo, std::set<Usuario> usuarios, std::set<Sala>
 
 Software::Software(const std::string& nombre_fichero_usuarios, const std::string& nombre_fichero_catalogo) 
                 : catalogo_(nombre_fichero_catalogo), nombre_fichero_base_datos_usuario_(nombre_fichero_usuarios) {
-                std::cout << " 1) Solicitar préstamo\n";
-                std::cout << " 2) Realizar devolución\n";
-                std::cout << " 3) Consultar catálogo\n";
-                std::cout << " 4) Reserva de sala\n";
-                std::cout << " 5) Cerrar sesión\n\n";
-                std::cout << "Opción: ";
-                std::cin >> opcion_segunda; 
   for (int i{0}; i < 10; ++i) {
     Sala sala{7, i};
     salas_.insert(sala);
@@ -46,7 +39,7 @@ void Software::menu() {
   std::string press_enter;
   char press_enter_opcion1;
   std::string nombre_usuario, password, correo, titulo_libro;
-  int numero_ocupantes, identificador_sala, dia_sala, hora_sala, id_libro;
+  int id_libro;
   Usuario usuario;
   system("clear");
   std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLIOTECAS\n\n\n\n";
@@ -129,12 +122,16 @@ void Software::menu() {
                       std::cout << "El libro no está disponible en el catálogo" << std::endl;
                     }
                     continue;
-                  case 4:
+                  case 4: {
+                    int numero_ocupantes, identificador_sala, dia_sala, hora_sala;
+                    std::string mes;
                     system("clear");
                     std::cout << "¿Cuántos van a reservar la sala? ";
                     std::cin >> numero_ocupantes;
                     std::cout << "¿Qué sala quieres reservar? ";
                     std::cin >> identificador_sala;
+                    std::cout << "¿Mes de la reserva? ";
+                    std::cin >> mes;
                     std::cout << "¿Día de la reserva? ";
                     std::cin >> dia_sala; 
                     std::cout << "¿Hora de la reserva? ";
@@ -143,13 +140,14 @@ void Software::menu() {
                       // std::cout << "Hora no accesible\n\nHorario de la biblioteca: 9:00-21:00" << std::endl;
                       // continue;
                     //}
-                    if (reservaSala_(numero_ocupantes, identificador_sala, hora_sala, dia_sala)) {
+                    if (reservaSala_(numero_ocupantes, mes, identificador_sala, hora_sala, dia_sala)) {
                       std::cout << "Reserva realizada con éxito" << std::endl;
                     }
                     else {
                       std::cout << "Ha habido un problema con la reserva. Inténtelo de nuevo más tarde." << std::endl;
                     }
                     continue;
+                  }
                   case 5:
                     system("clear");
                     std::cout << "Cerrando sesión...\n";
@@ -302,7 +300,7 @@ bool Software::reservaValida_(const std::string& mes, const int dia, int hora) {
   // Según si el mes tiene 30 o 31 días le asignamos un identificador especial para
   // comprobar si el día es correcto
   std::map<std::string, int> mes_numero_mes{{"Enero", 1}, {"Febrero", 3}, 
-  {"Marzo", 1} {"Abril", 2}, {"Mayo", 1}, {"Junio", 2}, {"Julio", 1}, {"Agosto", 1}, 
+  {"Marzo", 1}, {"Abril", 2}, {"Mayo", 1}, {"Junio", 2}, {"Julio", 1}, {"Agosto", 1}, 
   {"Septiembre", 2}, {"Octubre", 1}, {"Noviembre", 2}, {"Diciembre", 1}};
   int identificador_mes{mes_numero_mes[mes]};
   switch (identificador_mes) {
@@ -322,7 +320,7 @@ bool Software::reservaValida_(const std::string& mes, const int dia, int hora) {
 }
 
 bool Software::reservaSala_(int numero_ocupantes, const std::string& mes, int identificador_sala, int dia_sala, int hora_sala) {
-  if (reservaValida_(mes, dia, hora)) {
+  if (reservaValida_(mes, dia_sala, hora_sala)) {
     std::cerr << "Error, la fecha introducida no es válida para realizar una reserva " << std::endl;
     return false;
   }

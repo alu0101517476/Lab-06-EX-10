@@ -14,5 +14,5 @@ bool Libro::operator>=(const Libro& libro2) const {
 
 }
 void Libro::Print() const {
-  std::cout << id << " " << titulo_  << std::endl;
+  std::cout << id_ << " " << titulo_  << std::endl;
 }
