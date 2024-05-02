@@ -5,7 +5,7 @@
 
 class Libro {
  public:
-  Libro(std::string titulo, int id, bool disponibilidad = true) : titulo_(titulo), disponibilidad_{disponibilidad} {}
+  Libro(std::string titulo, int id, bool disponibilidad = true) : titulo_(titulo), id_(id), disponibilidad_{disponibilidad} {}
   // getters
   std::string getTitulo() const { return titulo_; }
   int getId() const { return id_; }

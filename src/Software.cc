@@ -1,15 +1,14 @@
 #include "../Include/Sofware.h"
 std::string Cifra(std::string palabra) {
   for (int i{0}; i < palabra.size(); ++i) {
-    palabra[i] = palabra[i] + 30;
+    palabra[i] = palabra[i] + 3;
   }
   return palabra;
 }
 
-
 std::string DCifra(std::string palabra) {
   for(int i = 0; i < palabra.size(); i++) {
-    palabra[i] -= 30;
+    palabra[i] = palabra[i] - 3;
   }
   return palabra; 
 }
@@ -75,7 +74,7 @@ void Software::menu() {
             usuario.setCorreo(correo);
             usuario.setContrasena(password);
             usuario.setNombreUsuario(nombre_usuario);
-            if (!iniciarSesion_(nombre_fichero_base_datos_usuario_, Cifra(nombre_usuario), Cifra(password))) { break; }
+            if (!iniciarSesion_(nombre_fichero_base_datos_usuario_, nombre_usuario, password)) { break; }
             while (true) {
               std::cout << "\n\nPulsa C (continuar): ";
               std::cin >> press_enter_opcion1;
