@@ -6,7 +6,9 @@
 #include <limits>
 #include <map>
 #include <unistd.h>
+#include <stdio.h>
 
+#include "colors.h"
 #include "Catalogo.h"
 #include "Sala.h"
 #include "Usuario.h"

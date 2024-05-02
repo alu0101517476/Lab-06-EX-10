@@ -42,22 +42,27 @@ void Software::menu() {
   int id_libro;
   Usuario usuario;
   system("clear");
-  std::cout << "\n\n\n\n\nBIENVENIDO A LA RED DE BIBLIOTECAS\n\n\n\n";
-  std::cout << "--> Inicia sesión en nuestra biblioteca para acceder a diferentes servicios o crea por primera vez una cuenta propia" << std::endl;
-  std::cout << "--> Podrás acceder a nuestro cátalogo que ofrece una amplia variedad de árticulos, libros y revista" << std::endl;
-  std::cout << "Cualquier duda comunicarse con los diferentes teléfonos de contacto:\n  +34 677 77 77 77\n +34 622 22 22 22" << std::endl; 
+  std::cout << MAGENTA << "\n\n\n\n\n                                    BIENVENIDO A LA RED DE BIBLIOTECAS\n\n\n\n" << WHITE;
+  std::cout << YELLOW << "-->" << WHITE <<" Inicia sesión en nuestra biblioteca para acceder a diferentes servicios o crea una cuenta propia." << std::endl;
+  std::cout << YELLOW << "-->" << WHITE <<" Podrás acceder a nuestro cátalogo que ofrece una amplia variedad de árticulos, libros y revistas." << std::endl;
+  std::cout << YELLOW << "-->" << WHITE <<" Reserva ya tu sala indicando número de personas, sala a reservar, día y hora.\n" << std::endl;
+  std::cout << WHITE << "Cualquier duda se podrá comunicar con estos teléfonos de contacto:\n" << BLUE << " +34 677 77 77 77\n" << BLUE << " +34 622 22 22 22\n\n" << std::endl;
+  std::cout << WHITE << "O bien enviar un correo a estos e-mails:\n" << BLUE << " alu0101547619@ull.edu.es\n" << BLUE << " alu0101567211@ull.edu.es\n\n" << std::endl; 
   while (true) {
-    std::cout << "         Pulsa Enter";
+    std::cout << WHITE <<  "         Pulsa Enter para acceder al sistema:";
     if (std::getline(std::cin, press_enter) && press_enter.empty()) {
       system("clear");
       while (true) {
-        std::cout << "\n¿Qué acción deseas realizar?\n\n";
-        std::cout << " 1) Iniciar sesión\n";
-        std::cout << " 2) Crear cuenta\n";
-        std::cout << " 3) Salir\n";
-        std::cout << "Opción: ";
+        std::cout << "\nPara poder acceder a los servicios de la biblioteca será necesario realizar el inicio de sesión con las credenciales correctas:\n\n";
+        std::cout << YELLOW << " --> " << WHITE << "Ingrese " << BG_GREEN << "1" << RESET << " para dirigirte a la pantalla de iniciar sesión\n\n";
+        std::cout << "Si bien no tienes una cuenta de la bilioteca, deberás crearte una nueva cuenta:\n\n";
+        std::cout << YELLOW <<" --> " << WHITE << "Ingrese " << BG_GREEN << "2" << RESET <<  " para dirigirte a la pantalla de creación de cuenta\n\n";
+        std::cout << "Una vez realizada la acción deseada podrás salir de la biblioteca:\n\n";
+        std::cout << YELLOW <<" --> " << WHITE << "Ingrese "<< BG_GREEN << "3" << RESET << " para salir de la pantalla de inicio de la biblioteca\n\n";
+        std::cout << BLUE << "Opción elegida: " << RESET ;
         int opcion_inicio, opcion_segunda;
         std::cin >> opcion_inicio;
+        std::cout << RESET;
         switch (opcion_inicio) {
           case 1:
             system("clear");
@@ -205,11 +210,11 @@ void Software::menu() {
             break;
           case 3:
             system("clear");
-            std::cout << "Termina el programa\n\n";
+            std::cout << MAGENTA << "\n\n                       GRACIAS POR SU VISITA\n\n\n\n";
             exit(1);
           default:
             system("clear");
-            std::cout << "Error: Opción incorrecta\n\n";
+            std::cout << RED << "Exit Error\nLa opción introducida no existe\n\n" << RESET;
             break;
         }
       }
